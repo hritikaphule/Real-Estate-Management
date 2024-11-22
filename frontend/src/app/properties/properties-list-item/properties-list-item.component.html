@@ -1,0 +1,57 @@
+<ion-card (click)="selectProperty(property())" class="shadow-none border-[1px] cursor-pointer">
+  <ion-card-content>
+    <div class="flex gap-x-1">
+      <ion-badge
+        class="bg-primary h-5"
+        *ngIf="enableOwnedBadge && user()?.user_id === property().user_id"
+      >
+        Owned
+      </ion-badge>
+      <app-property-badge [type]="property()?.type"></app-property-badge>
+      |
+      <ion-badge
+        class="h-5"
+        [ngClass]="{
+          'bg-success': property().transactionType === 'sale',
+          'bg-warning': property().transactionType === 'rent'
+        }"
+      >
+        For {{ property().transactionType }}
+      </ion-badge>
+
+      <span class="ml-auto mr-0" [ngClass]="{ 'mr-9': isOwner() }">
+        {{ property().createdAt | date }}
+      </span>
+
+      <button
+        (click)="openPopup($event)"
+        class="bg-gray-300 duration-300 ease-in-out transition-colors hover:bg-gray-400 absolute rounded-full p-2 top-2 right-3 flex justify-center items-center"
+        *ngIf="isOwner()"
+      >
+        <ion-icon color="dark" name="ellipsis-vertical-outline"></ion-icon>
+      </button>
+    </div>
+
+    <div class="flex items-center text-[14px]">
+      <ion-text class="lg:text-[16px]">
+        {{
+          property().name?.length > 30
+            ? property().name.slice(0, 30) + "..."
+            : property().name
+        }}
+      </ion-text>
+      <span class="px-2">|</span>
+      <ion-text class="hidden md:block">
+        {{
+          property().description?.length > 40
+            ? property().description.slice(0, 40) + "..."
+            : property().description
+        }}
+      </ion-text>
+
+      <span class="ml-auto mr-0 font-semibold">
+        {{ property().price | currency : "PHP" }}
+      </span>
+    </div>
+  </ion-card-content>
+</ion-card>

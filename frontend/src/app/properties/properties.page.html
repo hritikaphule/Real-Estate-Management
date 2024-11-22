@@ -1,0 +1,124 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title> Properties Page </ion-title>
+
+    <ion-buttons slot="end">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+  </ion-toolbar>
+
+  <ion-toolbar>
+    <ion-searchbar
+      inputmode="text"
+      clearIcon
+      debounce="700"
+      animated
+      (ionChange)="setSearchedText($event)"
+      placeholder="Search Property"
+    ></ion-searchbar>
+
+    <ion-grid>
+      <ion-row>
+        <ion-col size="12" sizeMd="6">
+          <ion-list>
+            <ion-item lines="none">
+              <ion-select
+                multiple="true"
+                [value]="filterBy()"
+                okText="Confirm"
+                cancelText="Dismiss"
+                label="Filter:"
+                (ionChange)="setFilters($event)"
+              >
+                <ion-select-option
+                  *ngFor="let filter of filters"
+                  [value]="filter.value"
+                >
+                  {{filter.label}}
+                </ion-select-option>
+              </ion-select>
+            </ion-item>
+          </ion-list>
+        </ion-col>
+
+        <ion-col size="12" sizeMd="6">
+          <ion-list>
+            <ion-item lines="none">
+              <ion-select
+                [value]="sortBy()"
+                okText="Confirm"
+                cancelText="Dismiss"
+                label="Sort by:"
+                (ionChange)="setSort($event)"
+              >
+                <ion-select-option
+                  *ngFor="let sort of sorts"
+                  [value]="sort.value"
+                >
+                  {{ sort.label}}
+                </ion-select-option>
+              </ion-select>
+            </ion-item>
+          </ion-list>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-toolbar>
+</ion-header>
+
+<ion-fab
+  slot="fixed"
+  vertical="bottom"
+  horizontal="end"
+  class="ion-margin-end show-on-mobile"
+>
+  <ion-fab-button (click)="presentModal()" color="success">
+    <ion-icon name="add"></ion-icon>
+  </ion-fab-button>
+</ion-fab>
+
+<ion-content>
+  <div class="properties-container">
+    <ion-progress-bar
+      style="margin: 4px 0 0 0"
+      type="indeterminate"
+      *ngIf="isLoading()"
+    ></ion-progress-bar>
+
+    <ion-grid>
+      <ion-row class="ion-align-items-center ion-margin-top hide-on-mobile">
+        <ion-col class="heading ion-padding-horizontal flex items-center">
+          <span class="mr-3">List of Properties</span>
+   
+          <!-- Cards Display Options -->
+          <ion-button class="ml-2" (click)="displayOption.set(displayType.CardView)" [disabled]="displayOption() === 'cards'" size="small" class="display-option-btn">
+            <ion-icon name="grid-outline"></ion-icon>
+          </ion-button>
+          <!-- List Display Options -->
+          <ion-button (click)="displayOption.set(displayType.ListView)" [disabled]="displayOption() === 'list'" size="small" class="display-option-btn">
+            <ion-icon name="reorder-four-outline"></ion-icon>
+          </ion-button>
+        </ion-col>
+
+        <ion-col class="ion-padding-horizontal">
+          <ion-button
+            color="success"
+            class="ion-float-right"
+            (click)="presentModal()"
+          >
+            New Property
+            <ion-icon name="add-circle-outline"></ion-icon
+          ></ion-button>
+        </ion-col>
+      </ion-row>
+      <!-- Card List of Properties -->
+      <app-properties-list
+        [displayOption]="displayOption()"
+        [properties]="properties()"
+        [enableOwnedBadge]="true"
+        [(disableInfinitScroll)]="disableInfinitScroll"
+        #propertyLists
+      ></app-properties-list>
+    </ion-grid>
+  </div>
+</ion-content>

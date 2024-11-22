@@ -1,0 +1,111 @@
+<ion-header translucent>
+  <ion-toolbar>
+    <ion-title>Enquiry Detail</ion-title>
+    <ion-buttons slot="start">
+      <ion-button (click)="location.back()">
+        <ion-icon name="arrow-back-outline" style="font-size: 28px"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding" *ngIf="enquiry()">
+  <div class="max-w-[1600px] my-0 mx-auto">
+    <ion-card class="ion-no-padding border-[1px] border-gray-300 shadow-none">
+      <ion-card-header>
+        <ion-card-title class="flex items-center">
+          <ion-text type="dark">{{ enquiry().property?.name }}</ion-text>
+          <ion-button
+            size="small"
+            fill="outline"
+            class="text-[12px] font-normal ml-3"
+            (click)="gotToProperty(enquiry().property.property_id)"
+          >
+            View Property
+          </ion-button>
+        </ion-card-title>
+
+        <ion-card-subtitle
+          class="ion-text-capitalize topic-subtitle flex gap-3 items-center"
+        >
+          Topic -
+          <ion-badge color="primary" class="py-2 px-3">{{ enquiry().topic }}</ion-badge>
+        </ion-card-subtitle>
+      </ion-card-header>
+    </ion-card>
+
+    <ion-card class="shadow-none border-[1px] border-gray-300">
+      <ion-card-header class="border-b-[1px] border-gray-300">
+        <ion-card-subtitle class="ion-text-capitalize" *ngIf="enquiry().replyTo">
+          <button
+            class="p-0 text-[16px] bg-transparent ellipsis"
+            (click)="goToEnquiry(enquiry().replyTo.enquiry_id)"
+          >
+            <ion-icon name="arrow-redo" color="primary"></ion-icon>
+            <span class="dark:text-light">
+              [Response to] - {{ enquiry().replyTo.title }}
+            </span>
+          </button>
+        </ion-card-subtitle>
+
+        <ion-card-title class="ion-margin-top">
+          {{ enquiry().title }}
+        </ion-card-title>
+        <ion-card-subtitle> {{ enquiry().createdAt | date }}</ion-card-subtitle>
+      </ion-card-header>
+
+      <ion-card-content>
+        <div class="px-4 pb-2 pt-8 min-h-fit rounded-2xl text-dark dark:text-light">
+          <markdown [data]="enquiry().content"></markdown>
+        </div>
+
+        <a class="ion-padding text-link underline">
+          - {{ enquiry().email }}
+          <span *ngIf="sentByMe()">(You)</span>
+        </a>
+      </ion-card-content>
+    </ion-card>
+
+    <div class="flex pl-2 items-center">
+      <ion-button
+        color="primary"
+        (click)="createEnquiryModal()"
+        *ngIf="!sentByMe()"
+      >
+        <ion-icon name="create-outline"></ion-icon>
+        Reply
+      </ion-button>
+
+      <ion-button
+        color="light"
+        (click)="report(enquiry().enquiry_id)"
+        *ngIf="!sentByMe()"
+        class="ml-auto"
+      >
+        <ion-icon name="flag-outline" color="danger"></ion-icon>
+        <ion-text color="danger"> Report </ion-text>
+      </ion-button>
+
+      <ion-button color="danger" (click)="delete(enquiry().enquiry_id)">
+        <ion-icon name="trash-outline" color="light"></ion-icon>
+        <ion-text color="light"> Delete </ion-text>
+      </ion-button>
+    </div>
+  </div>
+</ion-content>
+
+<ion-content *ngIf="!enquiry() && ready()">
+  <div class="details-container p-4">
+    <ion-card class="border-2 shadow-none py-8">
+      <ion-card-header>
+        <h1 class="text-[42px] text-center">Error 404</h1>
+      </ion-card-header>
+      <ion-card-content>
+        <h5 class="!text-[24px] text-center">
+          <strong>Enquiry</strong> not found. It may not exist or has been
+          deleted.
+        </h5>
+      </ion-card-content>
+    </ion-card>
+  </div>
+</ion-content>

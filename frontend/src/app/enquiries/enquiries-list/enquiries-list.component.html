@@ -1,0 +1,38 @@
+<div class="ion-padding-vertical">
+  <ion-card class="labels-card ion-hide-lg-down">
+    <ion-card-content>
+      <ion-grid>
+        <ion-row>
+          <ion-col size="4">
+            <ion-text class="text-[19px] font-bold">
+              Message <small>({{ enquiriesList().length }})</small>
+            </ion-text>
+          </ion-col>
+
+          <ion-col size="2">
+            <ion-text class="text-[19px] font-bold">Topic</ion-text>
+          </ion-col>
+
+          <ion-col size="4" class="ion-text-center">
+            <ion-text class="text-[19px] font-bold">Email Address</ion-text>
+          </ion-col>
+
+          <ion-col size="2">
+            <ion-text class="text-[19px] font-bold">Date</ion-text>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-card-content>
+  </ion-card>
+
+  @if (enquiriesList().length) {
+    @for (item of enquiriesList(); track $index) {
+      <app-enquiries-list-item [enquiry]="item" class="ion-margin-vertical"
+        (click)="selectEnquiry(item)"></app-enquiries-list-item>
+    }
+  } @else {
+    <div class="font-semibold py-8 text-center text-[24px] dark:text-gray-300">
+      Currently empty.
+    </div>
+  }
+</div>

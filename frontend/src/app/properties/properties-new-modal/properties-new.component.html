@@ -1,0 +1,198 @@
+<ion-header translucent>
+  <ion-toolbar>
+    <ion-buttons slot="start" *ngIf="step === 2">
+      <ion-button (click)="step = 1">
+        <ion-icon name="arrow-back-outline" style="font-size: 24px"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+
+    <ion-title>Add new property</ion-title>
+
+    <ion-buttons slot="end">
+      <ion-button (click)="dismissModal()">
+        <ion-icon name="close-outline" style="font-size: 28px"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="form ion-padding">
+  <form [formGroup]="propertyForm">
+    <!-- STEP ONE -->
+    <section *ngIf="step === 1">
+      <ion-item lines="none">
+        <ion-input
+          type="text"
+          label="Name:"
+          labelPlacement="floating"
+          formControlName="name"
+          fill="outline"
+          helperText="Enter property name"
+          errorText="Invalid Name"
+        ></ion-input>
+      </ion-item>
+
+      <ion-item lines="none">
+        <ion-input
+          type="text"
+          label="Address:"
+          labelPlacement="floating"
+          formControlName="address"
+          fill="outline"
+          helperText="Enter property physical address"
+          errorText="Invalid address, address is required"
+        ></ion-input>
+      </ion-item>
+
+      <ion-item lines="none">
+        <ion-textarea
+          formControlName="description"
+          labelPlacement="floating"
+          label="Description:"
+          placeholder="..."
+          fill="outline"
+          helperText="Enter property description"
+          errorText="Invalid description, too short"
+        ></ion-textarea>
+      </ion-item>
+
+      <ion-list>
+        <ion-radio-group formControlName="type">
+          <ion-list-header>
+            <ion-label>Type</ion-label>
+          </ion-list-header>
+
+          <ion-item lines="none" *ngFor="let type of propertyTypes">
+            <label for="radio">{{ type.label }}</label>
+            <ion-radio
+              slot="start"
+              id="radio"
+              [label]="type.label"
+              [value]="type.value"
+            ></ion-radio>
+          </ion-item>
+        </ion-radio-group>
+
+        <ion-radio-group formControlName="transactionType">
+          <ion-list-header>
+            <ion-label>Transaction Type</ion-label>
+          </ion-list-header>
+
+          <ion-item lines="none" *ngFor="let transaction of transactionType">
+            <label for="radio">{{ transaction.label }}</label>
+            <ion-radio
+              slot="start"
+              id="radio"
+              [label]="transaction.label"
+              [value]="transaction.value"
+            ></ion-radio>
+          </ion-item>
+        </ion-radio-group>
+      </ion-list>
+    </section>
+    <!-- STEP TWO -->
+    <section *ngIf="step === 2">
+      <ion-item
+        lines="none"
+        *ngIf="propertyForm.get('transactionType').value === 'rent'"
+      >
+        <ion-select
+          label="Payment Frequency"
+          label-placement="floating"
+          fill="outline"
+          formControlName="paymentFrequency"
+        >
+          <ion-select-option
+            *ngFor="let frequency of rentPaymentFrequency"
+            [value]="frequency.value"
+          >
+            {{ frequency.label }}
+          </ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <ion-item lines="none">
+        <ion-input
+          type="number"
+          label="Price:"
+          labelPlacement="floating"
+          formControlName="price"
+          fill="outline"
+          helperText="Enter property price"
+          errorText="Invalid price"
+        ></ion-input>
+      </ion-item>
+
+      <ion-item lines="none">
+        <ion-input
+          type="text"
+          placeholder="USD, PHP, SGD"
+          labelPlacement="floating"
+          label="Currency:"
+          formControlName="currency"
+          fill="outline"
+          helperText="Enter property currency"
+          errorText="Currency is not valid"
+        ></ion-input>
+      </ion-item>
+
+      <ion-item lines="none">
+        <ion-textarea
+          formControlName="features"
+          label="Features:"
+          labelPlacement="floating"
+          placeholder="bedroom, kitchen, ..."
+          fill="outline"
+          helperText="For multiple features separate with comma( , )"
+        ></ion-textarea>
+      </ion-item>
+
+      <div class="coord-heading">
+        <span class="text-[18px] dark:text-light mr-2">Set Marker Position:</span>
+        <ion-button size="small" color="primary" (click)="openMap()">
+          Open Map
+        </ion-button>
+      </div>
+      <div class="coord-input">
+        <ion-item lines="none">
+          <ion-input
+            type="text"
+            label="Latitude:"
+            labelPlacement="floating"
+            formControlName="lat"
+            placeholder="Latitude"
+            fill="outline"
+          ></ion-input>
+        </ion-item>
+        <div class="ion-margin"></div>
+        <ion-item lines="none">
+          <ion-input
+            type="text"
+            label="Longitude:"
+            labelPlacement="floating"
+            formControlName="lng"
+            placeholder="Longitude"
+            fill="outline"
+          ></ion-input>
+        </ion-item>
+      </div>
+    </section>
+
+    <ion-button
+      expand="block"
+      size="large"
+      (click)="submit()"
+      class="ion-margin"
+      color="success"
+      [disabled]="isSubmit"
+    >
+      {{ step === 2 ? "Submit" : "Next" }}
+    </ion-button>
+  </form>
+</ion-content>
+
+<ion-footer translucent>
+  <ion-toolbar>
+    <div class="ion-padding-horizontal">Step {{ step }} / 2</div>
+  </ion-toolbar>
+</ion-footer>

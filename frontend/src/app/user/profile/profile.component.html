@@ -1,0 +1,146 @@
+<ion-content *ngIf="user">
+  <div class="profile-container ion-padding-vertical">
+    <ion-grid>
+      <ion-row>
+        <ion-col size="12" sizeMd="4">
+          <ion-card class="shadow-none">
+            <ion-card-header class="ion-no-padding">
+              <ion-card-title class="ion-padding"></ion-card-title>
+              <div class="profile-img-container">
+                <img [src]="imgUrl" />
+              </div>
+            </ion-card-header>
+
+            <ion-card-content>
+              <input
+                type="file"
+                (change)="onSelectFile($event)"
+                accept="image/*"
+                [hidden]="true"
+                id="image-upload"
+              />
+              <ion-button
+                color="primary"
+                expand="block"
+                (click)="toggleUpload()"
+              >
+                Upload Image
+              </ion-button>
+
+              <div class="app-use-info">
+                <div class="item">
+                  <ion-icon name="flame-outline"></ion-icon>
+                  <ion-text>Joined {{ user()?.createdAt | date }}</ion-text>
+                </div>
+                <div class="item">
+                  <ion-icon name="calendar-outline"></ion-icon>
+                  <ion-text>Visited For 1 day</ion-text>
+                </div>
+              </div>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+
+        <ion-col size="12" sizeMd="8">
+          <ion-card class="shadow-none">
+            <ion-card-header>
+              <ion-card-title> My Information </ion-card-title>
+            </ion-card-header>
+
+            <ion-card-content>
+              <form
+                (submit)="submit()"
+                [formGroup]="userForm"
+                class="form-information"
+              >
+                <ion-item lines="none">
+                  <ion-input
+                    labelPlacement="floating"
+                    label="Email *"
+                    type="email"
+                    [readonly]="true"
+                    [value]="user()?.email"
+                  ></ion-input>
+                </ion-item>
+
+                <ion-item lines="none">
+                  <ion-input
+                    labelPlacement="floating"
+                    label="Full Name *"
+                    type="text"
+                    formControlName="fullName"
+                    [value]="user()?.fullName"
+                    errorText="Full Name is too short."
+                  ></ion-input>
+                </ion-item>
+
+                <ion-item lines="none">
+                  <ion-textarea
+                    placeholder="..."
+                    labelPlacement="floating"
+                    label="About Me:"
+                    formControlName="about"
+                    [value]="user()?.about"
+                    errorText="Maximum character limit of 1000 has been reached."
+                  ></ion-textarea>
+                </ion-item>
+
+                <ion-item lines="none">
+                  <ion-input
+                    labelPlacement="floating"
+                    label="Address"
+                    type="text"
+                    formControlName="address"
+                    [value]="user()?.address"
+                    errorText="Maximum character limit of 1000 has been reached."
+                  ></ion-input>
+                </ion-item>
+
+                <div class="ion-text-end ion-padding-vertical">
+                  <ion-button type="submit">SAVE CHANGES</ion-button>
+                </div>
+              </form>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col size="12" class="">
+          <ion-card class="shadow-none">
+            <ion-card-header>
+              <div
+                class="border-b-2 border-primary-tint flex flex-row items-center gap-x-[2px]"
+              >
+                <ion-button
+                  class="tab-button m-0 border-b-0"
+                  (click)="toggleActivityPropertyTab()"
+                  color="primary"
+                  [fill]="isActivityActive() ? 'solid' : 'clear'"
+                >
+                  My Activities
+                </ion-button>
+                <ion-button
+                  class="tab-button m-0 border-b-0"
+                  (click)="toggleActivityPropertyTab()"
+                  color="primary"
+                  [fill]="isActivityActive() ? 'clear' : 'solid'"
+                >
+                  My Properties
+                </ion-button>
+              </div>
+            </ion-card-header>
+
+            <ion-card-content class="min-h-[400px]">
+              @if (isActivityActive()) {
+                <app-activity-timeline />
+              } @else {
+                <app-user-properties></app-user-properties>
+              }
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </div>
+</ion-content>

@@ -1,0 +1,76 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Enquiries Page</ion-title>
+    <ion-buttons slot="end">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+  </ion-toolbar>
+  <ion-toolbar>
+    <ion-searchbar
+      clearIcon
+      debounce="1300"
+      [value]="search()"
+      animated
+      placeholder="Search Enquiry"
+      (ionChange)="setSearchedText($event)"
+    ></ion-searchbar>
+    <ion-grid>
+      <ion-row>
+        <ion-col size="12" sizeMd="6">
+          <ion-item lines="none">
+            <ion-select
+              multiple="true"
+              [value]="filterBy()"
+              label="Filter by:"
+              (ionChange)="setFilters($event)"
+            >
+              <ion-select-option
+                *ngFor="let filter of filters"
+                [value]="filter.value"
+              >
+                {{filter.label}}
+              </ion-select-option>
+            </ion-select>
+          </ion-item>
+        </ion-col>
+
+        <ion-col size="12" sizeMd="6">
+          <ion-item lines="none">
+            <ion-select
+              [value]="sortBy()"
+              okText="Okay"
+              label="Sort by:"
+              cancelText="Dismiss"
+              (ionChange)="setSort($event)"
+            >
+              <ion-select-option
+                *ngFor="let sort of sorts"
+                [value]="sort.value"
+              >
+                {{ sort.label}}
+              </ion-select-option>
+            </ion-select>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  @if (!user()) {
+    <app-need-signin-continue></app-need-signin-continue>
+  }
+
+  <div class="enquiries-container" *ngIf="user()">
+    <ion-progress-bar
+      style="margin: 4px 0 0 0"
+      type="indeterminate"
+      *ngIf="!enquiriesReady()"
+    ></ion-progress-bar>
+
+    <app-enquiries-list
+      #enquiriesList
+    ></app-enquiries-list>
+  </div>
+</ion-content>

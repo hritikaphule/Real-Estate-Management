@@ -1,0 +1,42 @@
+<!-- Cards View -->
+@if(displayOption() === 'cards') {
+  <ion-row class="ion-content-scroll-host">
+    <ion-col
+      size="12"
+      [sizeSm]="singleCol() ? 12 : 6"
+      [sizeMd]="singleCol() ? 12 : 4"
+      [sizeLg]="singleCol() ? 12 : 6"
+      [sizeXl]="singleCol() ? 12 : 3"
+      *ngFor="let item of propertiesList()"
+    >
+      <app-properties-card [property]="item"></app-properties-card>
+    </ion-col>
+  </ion-row>
+}
+
+<!-- List View -->
+@if(displayOption() === 'list') {
+  @for (item of propertiesList(); track $index) {
+    <app-properties-list-item 
+      [property]="item"
+      [enableOwnedBadge]="enableOwnedBadge()" 
+      [enablePopupOptions]="enablePopupOptions()"
+    ></app-properties-list-item>
+  }
+}
+
+<ion-row>
+  <ion-infinite-scroll
+    #IonInfiniteScroll
+    threshold="80px"
+    (ionInfinite)="loadMoreProperty()"
+    [disabled]="disableInfinitScroll()"
+  >
+    <ion-infinite-scroll-content
+      [ngClass]="{ 'py-12': !disableInfinitScroll() }"
+      loadingSpinner="bubbles"
+      loadingText="Loading data..."
+    >
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+</ion-row>
